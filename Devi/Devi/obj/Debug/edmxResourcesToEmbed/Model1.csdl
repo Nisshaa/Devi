@@ -1,0 +1,127 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="dmininModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Devices">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Title" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Logo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="DevicesOrder" Relationship="Self.FK_DevicesOrder_Devices" FromRole="Devices" ToRole="DevicesOrder" />
+  </EntityType>
+  <EntityType Name="DevicesOrder">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Num" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Date" Type="DateTime" Precision="0" />
+    <Property Name="Total" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="DevicesId" Type="Int32" />
+    <NavigationProperty Name="Devices" Relationship="Self.FK_DevicesOrder_Devices" FromRole="DevicesOrder" ToRole="Devices" />
+    <NavigationProperty Name="DevicesOrderProduct" Relationship="Self.FK_DevicesOrderProduct_DevicesOrderProduct1" FromRole="DevicesOrder" ToRole="DevicesOrderProduct" />
+  </EntityType>
+  <EntityType Name="DevicesOrderProduct">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ProductId" Type="Int32" />
+    <Property Name="DivecesorderId" Type="Int32" />
+    <Property Name="Count" Type="Double" />
+    <Property Name="Price" Type="Decimal" Precision="19" Scale="4" />
+    <NavigationProperty Name="DevicesOrder" Relationship="Self.FK_DevicesOrderProduct_DevicesOrderProduct1" FromRole="DevicesOrderProduct" ToRole="DevicesOrder" />
+    <NavigationProperty Name="Product" Relationship="Self.FK_DevicesOrderProduct_Product" FromRole="DevicesOrderProduct" ToRole="Product" />
+  </EntityType>
+  <EntityType Name="Product">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Title" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="ProductTypeId" Type="Int32" />
+    <Property Name="Image" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Price" Type="Double" />
+    <NavigationProperty Name="DevicesOrderProduct" Relationship="Self.FK_DevicesOrderProduct_Product" FromRole="Product" ToRole="DevicesOrderProduct" />
+    <NavigationProperty Name="ProductType" Relationship="Self.FK_Product_ProductType" FromRole="Product" ToRole="ProductType" />
+  </EntityType>
+  <EntityType Name="ProductType">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Title" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Product" Relationship="Self.FK_Product_ProductType" FromRole="ProductType" ToRole="Product" />
+  </EntityType>
+  <Association Name="FK_DevicesOrder_Devices">
+    <End Role="Devices" Type="Self.Devices" Multiplicity="0..1" />
+    <End Role="DevicesOrder" Type="Self.DevicesOrder" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Devices">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="DevicesOrder">
+        <PropertyRef Name="DevicesId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DevicesOrderProduct_DevicesOrderProduct1">
+    <End Role="DevicesOrder" Type="Self.DevicesOrder" Multiplicity="0..1" />
+    <End Role="DevicesOrderProduct" Type="Self.DevicesOrderProduct" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="DevicesOrder">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="DevicesOrderProduct">
+        <PropertyRef Name="DivecesorderId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_DevicesOrderProduct_Product">
+    <End Role="Product" Type="Self.Product" Multiplicity="0..1" />
+    <End Role="DevicesOrderProduct" Type="Self.DevicesOrderProduct" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Product">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="DevicesOrderProduct">
+        <PropertyRef Name="ProductId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Product_ProductType">
+    <End Role="ProductType" Type="Self.ProductType" Multiplicity="0..1" />
+    <End Role="Product" Type="Self.Product" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ProductType">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Product">
+        <PropertyRef Name="ProductTypeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="dmininEntities1" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Devices" EntityType="Self.Devices" />
+    <EntitySet Name="DevicesOrder" EntityType="Self.DevicesOrder" />
+    <EntitySet Name="DevicesOrderProduct" EntityType="Self.DevicesOrderProduct" />
+    <EntitySet Name="Product" EntityType="Self.Product" />
+    <EntitySet Name="ProductType" EntityType="Self.ProductType" />
+    <AssociationSet Name="FK_DevicesOrder_Devices" Association="Self.FK_DevicesOrder_Devices">
+      <End Role="Devices" EntitySet="Devices" />
+      <End Role="DevicesOrder" EntitySet="DevicesOrder" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DevicesOrderProduct_DevicesOrderProduct1" Association="Self.FK_DevicesOrderProduct_DevicesOrderProduct1">
+      <End Role="DevicesOrder" EntitySet="DevicesOrder" />
+      <End Role="DevicesOrderProduct" EntitySet="DevicesOrderProduct" />
+    </AssociationSet>
+    <AssociationSet Name="FK_DevicesOrderProduct_Product" Association="Self.FK_DevicesOrderProduct_Product">
+      <End Role="Product" EntitySet="Product" />
+      <End Role="DevicesOrderProduct" EntitySet="DevicesOrderProduct" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Product_ProductType" Association="Self.FK_Product_ProductType">
+      <End Role="ProductType" EntitySet="ProductType" />
+      <End Role="Product" EntitySet="Product" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
